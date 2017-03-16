@@ -8,6 +8,27 @@ namespace WeChat.Adapter
 {
     public class HashWrapper
     {
+        public static string SHA1_Hash(SortedDictionary<string, string> paras)
+        {
+            if (paras != null)
+            {
+                string signStr = string.Empty;
+                foreach (KeyValuePair<string, string> parameter in paras)
+                {
+                    if (signStr == string.Empty)
+                    {
+                        signStr = parameter.Key + "=" + parameter.Value != null ? parameter.Value : "";
+                    }
+                    else
+                    {
+                        signStr += "&" + parameter.Key + "=" + parameter.Value != null ? parameter.Value : "";
+                    }
+                }
+
+                return SHA1_Hash(signStr);
+            }
+            return null;
+        }
         public static string SHA1_Hash(string str_sha1_in)
         {
             SHA1 sha1 = new SHA1CryptoServiceProvider();
@@ -26,7 +47,29 @@ namespace WeChat.Adapter
             {
                 sb.Append(t[i].ToString("x").PadLeft(2, '0'));
             }
-            return sb.ToString();
+            return sb.ToString().ToUpper();
+        }
+
+        public static string MD5_Hash(SortedDictionary<string, string> paras)
+        {
+            if (paras != null)
+            {
+                string signStr = string.Empty;
+                foreach (KeyValuePair<string, string> parameter in paras)
+                {
+                    if (signStr == string.Empty)
+                    {
+                        signStr = parameter.Key + "=" + parameter.Value != null ? parameter.Value : "";
+                    }
+                    else
+                    {
+                        signStr += "&" + parameter.Key + "=" + parameter.Value != null ? parameter.Value : "";
+                    }
+                }
+
+                return MD5_Hash(signStr);
+            }
+            return null;
         }
     }
 }

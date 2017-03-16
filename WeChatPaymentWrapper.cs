@@ -289,10 +289,19 @@ namespace WeChat.Adapter
             return prepayId;
         }
 
-        public string GetJsApiPaySign(WeChatPayConfig config, SortedDictionary<string,string> param)
+        public static string GetJsApiPaySign(WeChatPayConfig config, string nancestr,string timestamp,string url, JSAPITicket ticket)
         {
             string sign = null;
-
+            SortedDictionary<string, string> param = new SortedDictionary<string, string>();
+            if(ticket==null || string.IsNullOrEmpty(ticket.Ticket))
+            {
+                throw new Exception("WeChat js ticket is empty.");
+            }
+            param.Add("jsapi_ticket", ticket.Ticket);
+            param.Add("timestamp", timestamp);
+            param.Add("noncestr", nancestr);
+            param.Add("url", url);
+            sign = HashWrapper.SHA1_Hash(param);
             return sign;
         }
 
