@@ -8,3 +8,9 @@ C:\Users\boling\Documents\GitHub\kuanmai\KMBit\WeiChat.Payment.Wrapper\bin\Debug
 C:\Users\boling\Documents\GitHub\kuanmai\KMBit\WeiChat.Payment.Wrapper\obj\Debug\WeChat.Adapter.dll
 C:\Users\boling\Documents\GitHub\kuanmai\KMBit\WeiChat.Payment.Wrapper\obj\Debug\WeChat.Adapter.pdb
 C:\Users\boling\Documents\GitHub\kuanmai\KMBit\WeiChat.Payment.Wrapper\obj\Debug\WeChat.Adapter.csprojResolveAssemblyReference.cache
+C:\Users\Danny\Documents\GitHub\WeiChat.Payment.Wrapper\bin\Debug\WeChatPayConfig.xml
+C:\Users\Danny\Documents\GitHub\WeiChat.Payment.Wrapper\bin\Debug\WeChat.Adapter.dll
+C:\Users\Danny\Documents\GitHub\WeiChat.Payment.Wrapper\bin\Debug\WeChat.Adapter.pdb
+C:\Users\Danny\Documents\GitHub\WeiChat.Payment.Wrapper\obj\Debug\WeChat.Adapter.csprojResolveAssemblyReference.cache
+C:\Users\Danny\Documents\GitHub\WeiChat.Payment.Wrapper\obj\Debug\WeChat.Adapter.dll
+C:\Users\Danny\Documents\GitHub\WeiChat.Payment.Wrapper\obj\Debug\WeChat.Adapter.pdb
