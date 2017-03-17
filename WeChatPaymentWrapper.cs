@@ -289,7 +289,19 @@ namespace WeChat.Adapter
             return prepayId;
         }
 
-        public static string GetJsApiPaySign(WeChatPayConfig config, string nancestr,string timestamp,string url, JSAPITicket ticket)
+        public static string GetJsApiPaySign(WeChatPayConfig config, string nancestr, string timestamp, string prepayId, string signType="MD5")
+        {
+            string sign = null;
+            SortedDictionary<string, string> param = new SortedDictionary<string, string>();
+            param.Add("timestamp", timestamp);
+            param.Add("noncestr", nancestr);
+            param.Add("appId", config.APPID);
+            param.Add("package", "prepay_id=" + prepayId);
+            param.Add("signType", signType);           
+            sign = HashWrapper.MD5_Hash(param,config.ShopSecret);
+            return sign;
+        }
+        public static string GetJsApiPayConfigSign(WeChatPayConfig config, string nancestr,string timestamp,string url, JSAPITicket ticket)
         {
             string sign = null;
             SortedDictionary<string, string> param = new SortedDictionary<string, string>();
