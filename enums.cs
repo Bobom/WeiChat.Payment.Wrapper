@@ -38,4 +38,12 @@ namespace WeChat.Adapter
         CHANGE,
         NONE
     }
+
+    public enum TransStatus
+    {
+        SUCCESS,
+        FAILED,       
+        PROCESSING,
+        NONE
+    }
 }

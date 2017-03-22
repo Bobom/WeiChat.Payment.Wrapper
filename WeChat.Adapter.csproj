@@ -51,12 +51,14 @@
     <Compile Include="JSAPITicket.cs" />
     <Compile Include="Requests\RefundApplyRequest.cs" />
     <Compile Include="Requests\RefundQueryRequest.cs" />
+    <Compile Include="Requests\TranfserRequest.cs" />
     <Compile Include="Requests\UserInfoRequest.cs" />
     <Compile Include="Responses\CropTranfserQueryResponse.cs" />
     <Compile Include="Responses\CropTransferResponse.cs" />
     <Compile Include="Responses\RefundApplyResponse.cs" />
     <Compile Include="Responses\RefundQueryResponse.cs" />
     <Compile Include="Responses\ResponseHelper.cs" />
+    <Compile Include="Responses\TranfserResponse.cs" />
     <Compile Include="Responses\UserInfoResponse.cs" />
     <Compile Include="WeChatException.cs" />
     <Compile Include="WeChatLogger.cs" />
