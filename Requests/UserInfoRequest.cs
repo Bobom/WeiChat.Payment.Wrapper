@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 using WeChat.Adapter.Responses;
 namespace WeChat.Adapter.Requests
 {
-    public class UserInfoRequest : BaseRequest
+    public class UserInfoRequest : BaseRequest<UserInfoResponse>
     {
         public string AccessToken { get; set; }
         public string OpenId { get; set; }

@@ -13,5 +13,9 @@
   <GetJsTicketUrl>https://api.weixin.qq.com/cgi-bin/ticket/getticket</GetJsTicketUrl>
   <GetAccessTokenUrl>https://api.weixin.qq.com/sns/oauth2/access_token</GetAccessTokenUrl>
   <GetUserInfoUrl>https://api.weixin.qq.com/sns/userinfo</GetUserInfoUrl>
+  <CropTransUrl>https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers</CropTransUrl>
+  <CropTransQueryUrl>https://api.mch.weixin.qq.com/mmpaymkttransfers/gettransferinfo</CropTransQueryUrl>
+  <RefundUrl>https://api.mch.weixin.qq.com/secapi/pay/refund</RefundUrl>
+  <RefundQueryUrl>https://api.mch.weixin.qq.com/pay/refundquery</RefundQueryUrl>
 </WeChatPayConfig>
 

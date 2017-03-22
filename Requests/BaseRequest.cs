@@ -6,21 +6,26 @@ using System.Threading.Tasks;
 using WeChat.Adapter;
 using WeChat.Adapter.Responses;
 using log4net;
+using System.Reflection;
+using System.Collections.Specialized;
+using System.Xml;
+
 namespace WeChat.Adapter.Requests
 {
    
-    public class BaseRequest
+    public class BaseRequest<T> where T:BaseResponse
     {
         protected string url = null;
-        protected string signType = "md5";
+        
         protected string secret = null;
         protected string shop_secret = null;
         public string appid { get; protected set; }        
         public string mch_id { get; protected set; }
         public string nonce_str { get; protected set; }
+        public string sign_type { get; set; }
         public string body { get; set; }
-        protected ILog logger = null;
 
+        protected ILog logger = null;
         public BaseRequest(WeChatPayConfig config)
         {
             logger = WeChatLogger.GetLogger();
@@ -28,7 +33,7 @@ namespace WeChat.Adapter.Requests
             this.secret = config.Secret;
             this.shop_secret = config.ShopSecret;
             this.mch_id = config.ShopID;
-            this.signType = config.SignType.ToLower();
+            this.sign_type = config.SignType.ToLower();
             this.nonce_str = Guid.NewGuid().ToString().Replace("-","");
             if(nonce_str.Length>32)
             {
@@ -36,104 +41,149 @@ namespace WeChat.Adapter.Requests
             }
             ConfigVerification();
         }
+        protected virtual void ParamsVerification()
+        {
 
+        }
         public virtual BaseResponse Execute()
         {
-            throw new NotImplementedException("Please implement this function in inherited object.");
+            logger.Info("Executing...");
+            ParamsVerification();
+            BaseResponse response = null;
+            SortedDictionary<string, string> paras = new SortedDictionary<string, string>();
+            Type type = this.GetType();
+            PropertyInfo[] properties = type.GetProperties();
+            if (properties != null)
+            {
+                for (int i = 0; i < properties.Length; i++)
+                {
+                    string key = properties[i].Name;
+                    object value = properties[i].GetValue(this);
+                    paras.Add(key, value.ToString());
+                }
+            }
+            //string paraUrl = string.Empty;
+            //foreach (KeyValuePair<string, object> param in paras)
+            //{
+            //    if (param.Value != null && !string.IsNullOrEmpty(param.Value.ToString()))
+            //    {
+            //        if (paraUrl == string.Empty)
+            //        {
+            //            paraUrl = param.Key + "=" + (param.Value != null ? param.Value.ToString() : "");
+            //        }
+            //        else
+            //        {
+            //            paraUrl += "&" + param.Key + "=" + (param.Value != null ? param.Value.ToString() : "");
+            //        }
+            //    }
+            //}
+            //paraUrl += "&key=" + this.shop_secret;
+            //logger.Info("parameters:" + paraUrl);
+            string sign = null;
+            //if (signType.Trim().ToLower() == "md5")
+            //{
+            //    sign = HashWrapper.MD5_Hash(paraUrl);
+            //}
+            sign = HashWrapper.MD5_Hash(paras, this.shop_secret); //sign.ToUpper();
+            logger.Info("sign:" + sign);
+            paras.Add("sign", sign);
+            NameValueCollection col = new NameValueCollection();
+            foreach (KeyValuePair<string, string> param in paras)
+            {
+                if (param.Value != null && !string.IsNullOrEmpty(param.Value.ToString()))
+                {
+                    col.Add(param.Key, param.Value);
+                }
+            }
+            string str = HttpSercice.PostHttpRequest(this.url, col, RequestType.POST, "text/xml");
+            logger.Info("response:" + str);
+            response = ParseXML(str);
+            logger.Info("Done.");
+            return response;
+        }
+        protected virtual T ParseXML(string resStr)
+        {
+            throw new NotImplementedException("Drivered class must implement this method");
         }
         private void ConfigVerification()
         {
             if(string.IsNullOrEmpty(appid))
             {
-                throw new Exception("AppId cannot be empty");
+                throw new WeChatException("AppId cannot be empty");
             }
             if (string.IsNullOrEmpty(mch_id))
             {
-                throw new Exception("mch_id cannot be empty");
+                throw new WeChatException("mch_id cannot be empty");
             }
-            if (string.IsNullOrEmpty(signType))
+            if (string.IsNullOrEmpty(sign_type))
             {
-                throw new Exception("signType cannot be empty,it should be MD5 or sha");
+                throw new WeChatException("signType cannot be empty,it should be MD5 or sha");
             }
-        }
-
-        public static ResuleState ParseResuleState(string text)
+        }      
+        protected void ParseBaseResponse(BaseResponse res,XmlDocument doc)
         {
-            if(string.IsNullOrEmpty(text))
+            try
             {
-                return ResuleState.NONE;
-            }
-            if(text.Trim().ToUpper()=="SUCCESS")
-            {
-                return ResuleState.SUCCESS;
-            }
-            else if (text.Trim().ToUpper() == "FAIL")
-            {
-                return ResuleState.FAIL;
-            }
-            return ResuleState.NONE;
-        }
-
-        public static TradeType ParseTradeType(string type)
-        {
-            TradeType tradeType = TradeType.NONE;
-            if(string.IsNullOrEmpty(type))
-            {
-                return tradeType;
-            }
-            if (type.Trim().ToUpper() == "MICROPAY")
-            {
-                tradeType = TradeType.MICROPAY;
-            }
-            else if (type.Trim().ToUpper() == "JSAPI")
-            {
-                tradeType= TradeType.JSAPI;
-            }
-            else if (type.Trim().ToUpper() == "NATIVE")
-            {
-                tradeType = TradeType.NATIVE;
-            }
-            else if (type.Trim() == "APP")
-            {
-                tradeType = TradeType.APP;
-            }
-            return tradeType;
-        }
-        public static TradeState ParseTraseState(string state)
-        {
-            TradeState tradeState = TradeState.NONE;
-            if (string.IsNullOrEmpty(state))
-            {
-                return tradeState;
-            }
-            if (!string.IsNullOrEmpty(state))
-            {
-                switch(state.Trim().ToUpper())
+                XmlNode return_code = doc.SelectSingleNode("/xml/return_code");
+                if (return_code != null && !string.IsNullOrEmpty(return_code.InnerText))
                 {
-                    case "SUCCESS":
-                        tradeState = TradeState.SUCCESS;
-                        break;
-                    case "REFUND":
-                        tradeState = TradeState.REFUND;
-                        break;
-                    case "NOTPAY":
-                        tradeState = TradeState.NOTPAY;
-                        break;
-                    case "CLOSED":
-                        tradeState = TradeState.CLOSED;
-                        break;
-                    case "REVOKED":
-                        tradeState = TradeState.REVOKED;
-                        break;
-                    case "USERPAYING":
-                        tradeState = TradeState.USERPAYING;
-                        break;
-                    case "PAYERROR":
-                        tradeState = TradeState.PAYERROR;
-                        break;
+                    res.return_code = ResponseHelper.ParseResultState(return_code.InnerText);
+                }
+
+                //If fail
+                if (res.return_code == ResultState.FAIL)
+                {
+                    XmlNode err_code = doc.SelectSingleNode("/xml/err_code");
+                    if (err_code != null && !string.IsNullOrEmpty(err_code.InnerText))
+                    {
+                        res.err_code = err_code.InnerText.Trim();
+                    }
+                    XmlNode err_code_des = doc.SelectSingleNode("/xml/err_code_des");
+                    if (err_code_des != null && !string.IsNullOrEmpty(err_code_des.InnerText))
+                    {
+                        res.err_code_des = err_code_des.InnerText.Trim();
+                    }
+                }
+
+                XmlNode return_msg = doc.SelectSingleNode("/xml/return_msg");
+                if (return_msg != null && !string.IsNullOrEmpty(return_msg.InnerText))
+                {
+                    res.return_msg = return_msg.InnerText.Trim();
+                }
+
+                XmlNode appid = doc.SelectSingleNode("/xml/appid");
+                if (appid != null && !string.IsNullOrEmpty(appid.InnerText))
+                {
+                    res.appid = appid.InnerText.Trim();
+                }
+
+                XmlNode mch_id = doc.SelectSingleNode("/xml/mch_id");
+                if (mch_id != null && !string.IsNullOrEmpty(mch_id.InnerText))
+                {
+                    res.mch_id = mch_id.InnerText.Trim();
+                }
+
+                XmlNode nonce_str = doc.SelectSingleNode("/xml/nonce_str");
+                if (nonce_str != null && !string.IsNullOrEmpty(nonce_str.InnerText))
+                {
+                    res.nonce_str = nonce_str.InnerText.Trim();
+                }
+
+                XmlNode sign = doc.SelectSingleNode("/xml/sign");
+                if (sign != null && !string.IsNullOrEmpty(sign.InnerText))
+                {
+                    res.sign = sign.InnerText.Trim();
+                }
+                XmlNode result_code = doc.SelectSingleNode("/xml/result_code");
+                if (result_code != null && !string.IsNullOrEmpty(result_code.InnerText))
+                {
+                    res.result_code = result_code.InnerText.Trim();
                 }
             }
-            return tradeState;
+            catch(Exception ex)
+            {
+                throw new WeChatException(ex);
+            }            
         }
     }
 }

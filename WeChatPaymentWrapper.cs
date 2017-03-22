@@ -98,7 +98,7 @@ namespace WeChat.Adapter
                     if (return_code != null)
                     {
                         logger.Info(return_code.InnerText);
-                        res.return_code = BaseRequest.ParseResuleState(return_code.InnerText);
+                        res.return_code = ResponseHelper.ParseResultState(return_code.InnerText);
                     }
                     XmlNode return_msg = doc.SelectSingleNode("/xml/return_msg");
                     if (return_msg != null)
@@ -106,7 +106,7 @@ namespace WeChat.Adapter
                         res.return_msg = return_msg.InnerText.Trim();
                     }
 
-                    if (res.return_code == ResuleState.FAIL)
+                    if (res.return_code == ResultState.FAIL)
                     {
                         return res;
                     }
@@ -182,7 +182,7 @@ namespace WeChat.Adapter
                     XmlNode trade_type = doc.SelectSingleNode("/xml/trade_type");
                     if (trade_type != null)
                     {
-                        res.trade_type = BaseRequest.ParseTradeType(trade_type.InnerText);
+                        res.trade_type = ResponseHelper.ParseTradeType(trade_type.InnerText);
                     }
 
                     XmlNode bank_type = doc.SelectSingleNode("/xml/bank_type");

@@ -13,7 +13,7 @@ using WeChat.Adapter;
 using WeChat.Adapter.Responses;
 namespace WeChat.Adapter.Requests
 {   
-    public class PreOrderRequest : BaseRequest
+    public class PreOrderRequest : BaseRequest<PreOrderResponse>
     {        
         public int total_fee { get; set; }
         public string spbill_create_ip { get; set; }
@@ -79,7 +79,7 @@ namespace WeChat.Adapter.Requests
             paraUrl += "&key=" + this.shop_secret;
             logger.Info("parameters:"+paraUrl);
             string sign = null;
-            if(signType.Trim().ToLower()=="md5")
+            if(sign_type.Trim().ToLower()=="md5")
             {
                 sign = HashWrapper.MD5_Hash(paraUrl);
             }
@@ -101,7 +101,7 @@ namespace WeChat.Adapter.Requests
             return response;
         }
 
-        public PreOrderResponse ParseXML(string str)
+        protected override PreOrderResponse ParseXML(string str)
         {
             PreOrderResponse res = null;
             if (string.IsNullOrEmpty(str))
@@ -116,11 +116,11 @@ namespace WeChat.Adapter.Requests
                 XmlNode return_code = doc.SelectSingleNode("/xml/return_code");
                 if(return_code!=null)
                 {
-                    res.return_code = BaseRequest.ParseResuleState(return_code.InnerText);
+                    res.return_code = ResponseHelper.ParseResultState(return_code.InnerText);
                 }
 
                 //If fail
-                if(res.return_code== ResuleState.FAIL)
+                if(res.return_code== ResultState.FAIL)
                 {
                     XmlNode err_code = doc.SelectSingleNode("/xml/err_code");
                     if (err_code != null)

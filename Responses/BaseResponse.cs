@@ -10,7 +10,7 @@ namespace WeChat.Adapter.Responses
     public class BaseResponse
     {
         public JObject Json { get; set; }
-        public ResuleState return_code { get; set; }
+        public ResultState return_code { get; set; }
         public string return_msg { get; set; }
         public string appid { get; set; }
         public string mch_id { get; set; }

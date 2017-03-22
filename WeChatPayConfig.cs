@@ -21,5 +21,9 @@ namespace WeChat.Adapter
         public string GetJsTicketUrl { get; set; }
         public string GetAccessTokenUrl { get; set; }
         public string GetUserInfoUrl { get; set; }
+        public string CropTransUrl { get; set; }
+        public string CropTransQueryUrl { get; set; }
+        public string RefundUrl { get; set; }
+        public string RefundQueryUrl { get; set; }
     }
 }

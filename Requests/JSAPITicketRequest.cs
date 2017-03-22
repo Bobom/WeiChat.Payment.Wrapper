@@ -9,7 +9,7 @@ using WeChat.Adapter.Responses;
 
 namespace WeChat.Adapter.Requests
 {
-    public class JSAPITicketRequest:BaseRequest
+    public class JSAPITicketRequest:BaseRequest<JSAPITicketResponse>
     {
         public AccessToken Access_Token { get; set; }
         public JSAPITicketRequest(WeChatPayConfig config):base(config)

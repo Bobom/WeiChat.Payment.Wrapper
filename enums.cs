@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WeChat.Adapter
 {
-    public enum ResuleState {
+    public enum ResultState {
         SUCCESS,
         FAIL,
         NONE
@@ -27,6 +27,15 @@ namespace WeChat.Adapter
         NATIVE,
         APP,
         MICROPAY,
+        NONE
+    }
+    public enum RefundStatus
+    {
+        SUCCESS,
+        REFUNDCLOSE,
+        NOTSURE,
+        PROCESSING,
+        CHANGE,
         NONE
     }
 }

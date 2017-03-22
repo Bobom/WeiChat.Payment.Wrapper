@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 using WeChat.Adapter.Responses;
 namespace WeChat.Adapter.Requests
 {
-    public class AuthAccessTokenRequest:BaseRequest
+    public class AuthAccessTokenRequest:BaseRequest<AccessTokenResponse>
     {
         public string code { get; set; }
         public AuthAccessTokenRequest(WeChatPayConfig config):base(config)
