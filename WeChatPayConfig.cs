@@ -8,6 +8,15 @@ namespace WeChat.Adapter
 {
     public class WeChatPayConfig
     {
+        /// <summary>
+        /// 微信开放平台的appid 和 secret
+        /// </summary>
+        public string OpenAppId { get; set; }
+        public string OpenSecret { get; set; }
+
+        /// <summary>
+        /// 以下是公众账号的appid和secret
+        /// </summary>
         public string APPID { get; set; }
         public string Secret { get; set; }
         public string ShopID { get; set; }

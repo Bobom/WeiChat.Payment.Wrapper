@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <WeChatPayConfig>
+  <OpenAppId>OpenAppId</OpenAppId>
+  <OpenSecret>86d8edd684d478dc5e780b1a26ce6561</OpenSecret>
   <APPID>wx1435d87f4ac9dc6d</APPID>
   <Secret>fbfa762a9f56b836763e2bfbd7ff7ad4</Secret>
   <ShopID>1264216901</ShopID>
