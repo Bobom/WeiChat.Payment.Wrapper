@@ -17,11 +17,11 @@ namespace WeChat.Adapter
                 {
                     if (signStr == string.Empty)
                     {
-                        signStr = parameter.Key + "=" + parameter.Value != null ? parameter.Value : "";
+                        signStr = parameter.Key + "=" + (parameter.Value != null ? parameter.Value : "");
                     }
                     else
                     {
-                        signStr += "&" + parameter.Key + "=" + parameter.Value != null ? parameter.Value : "";
+                        signStr += "&" + parameter.Key + "=" + (parameter.Value != null ? parameter.Value : "");
                     }
                 }
                 if(!string.IsNullOrEmpty(key))
@@ -62,11 +62,11 @@ namespace WeChat.Adapter
                 {
                     if (signStr == string.Empty)
                     {
-                        signStr = parameter.Key + "=" + parameter.Value != null ? parameter.Value : "";
+                        signStr = parameter.Key + "=" + (parameter.Value != null ? parameter.Value : "");
                     }
                     else
                     {
-                        signStr += "&" + parameter.Key + "=" + parameter.Value != null ? parameter.Value : "";
+                        signStr += "&" + parameter.Key + "=" + (parameter.Value != null ? parameter.Value : "");
                     }
                 }
                 if(!string.IsNullOrEmpty(key))

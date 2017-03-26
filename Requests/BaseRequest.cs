@@ -33,7 +33,7 @@ namespace WeChat.Adapter.Requests
             this.secret = config.Secret;
             this.shop_secret = config.ShopSecret;
             this.mch_id = config.ShopID;
-            this.sign_type = config.SignType.ToLower();
+            this.sign_type = config.SignType;
             this.nonce_str = Guid.NewGuid().ToString().Replace("-","");
             if(nonce_str.Length>32)
             {

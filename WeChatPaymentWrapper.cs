@@ -279,7 +279,7 @@ namespace WeChat.Adapter
             request.total_fee = totalFee;
             request.trade_type = type;
             request.body = body;
-            request.detail = "";
+            request.detail = body;
             request.openid = openId;
             response = request.Execute();
             if(response!=null)
@@ -293,8 +293,8 @@ namespace WeChat.Adapter
         {
             string sign = null;
             SortedDictionary<string, string> param = new SortedDictionary<string, string>();
-            param.Add("timestamp", timestamp);
-            param.Add("noncestr", nancestr);
+            param.Add("timeStamp", timestamp);
+            param.Add("nonceStr", nancestr);
             param.Add("appId", config.APPID);
             param.Add("package", "prepay_id=" + prepayId);
             param.Add("signType", signType);           
@@ -309,11 +309,18 @@ namespace WeChat.Adapter
             {
                 throw new Exception("WeChat js ticket is empty.");
             }
+            logger.Info("Generate pay config sign");
+            logger.Info("jsapi_ticket:"+ticket.Ticket);
+            logger.Info("timestamp:" + timestamp);
+            logger.Info("noncestr:" + nancestr);
+            logger.Info("url:" + url);
+
             param.Add("jsapi_ticket", ticket.Ticket);
             param.Add("timestamp", timestamp);
             param.Add("noncestr", nancestr);
             param.Add("url", url);
             sign = HashWrapper.SHA1_Hash(param);
+            logger.Info("sign:" + sign);
             return sign;
         }
 
