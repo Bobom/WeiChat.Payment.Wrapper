@@ -229,6 +229,12 @@ namespace WeChat.Adapter
             logger.Info("Done ParsePaymentNotify.............");
             return res;
         }
+
+        /// <summary>
+        /// Parse the signature from xml response returned by wechat payment
+        /// </summary>
+        /// <param name="xml"></param>
+        /// <returns></returns>
         public static string ParsePaymentNotifySignParas(string xml)
         {
             string str = null;
@@ -269,6 +275,18 @@ namespace WeChat.Adapter
             }
             return str;
         }
+
+        /// <summary>
+        /// Gets prepay_id from wechat payment
+        /// </summary>
+        /// <param name="config"></param>
+        /// <param name="openId"></param>
+        /// <param name="out_trade_no"></param>
+        /// <param name="body"></param>
+        /// <param name="clientIp"></param>
+        /// <param name="totalFee"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public static string GetPrepayId(WeChatPayConfig config,string openId,string out_trade_no,string body,string clientIp,int totalFee, TradeType type)
         { 
             string prepayId = string.Empty;
@@ -289,6 +307,15 @@ namespace WeChat.Adapter
             return prepayId;
         }
 
+        /// <summary>
+        /// Pay signature for JSSDK payment
+        /// </summary>
+        /// <param name="config"></param>
+        /// <param name="nancestr"></param>
+        /// <param name="timestamp"></param>
+        /// <param name="prepayId"></param>
+        /// <param name="signType"></param>
+        /// <returns></returns>
         public static string GetJsApiPaySign(WeChatPayConfig config, string nancestr, string timestamp, string prepayId, string signType="MD5")
         {
             string sign = null;
@@ -301,6 +328,16 @@ namespace WeChat.Adapter
             sign = HashWrapper.MD5_Hash(param,config.ShopSecret);
             return sign;
         }
+        
+        /// <summary>
+        /// JSSDK Payment configure signature
+        /// </summary>
+        /// <param name="config"></param>
+        /// <param name="nancestr"></param>
+        /// <param name="timestamp"></param>
+        /// <param name="url"></param>
+        /// <param name="ticket"></param>
+        /// <returns></returns>
         public static string GetJsApiPayConfigSign(WeChatPayConfig config, string nancestr,string timestamp,string url, JSAPITicket ticket)
         {
             string sign = null;
