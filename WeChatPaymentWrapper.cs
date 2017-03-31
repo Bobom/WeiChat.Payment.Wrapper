@@ -366,5 +366,30 @@ namespace WeChat.Adapter
             TradeState state = TradeState.NONE;
             return state;
         }
+        
+        /// <summary>
+        /// Refund money
+        /// </summary>
+        /// <param name="wechat_paymentNo">Wehchat payment number</param>
+        /// <param name="out_payment_no">Local payment number</param>
+        /// <param name="refund_no">Local refund number</param>
+        /// <param name="amount">Fen, please pay attention</param>
+        /// <returns></returns>
+        public static RefundApplyResponse Refund(WeChatPayConfig config,string wechat_paymentNo,string out_payment_no,string refund_no,int refundAmount,int totalAmount)
+        {
+            RefundApplyResponse res = null;
+            RefundApplyRequest request = new RefundApplyRequest(config);
+            request.transaction_id = wechat_paymentNo;
+            request.out_trade_no = out_payment_no;
+            request.out_refund_no = refund_no;
+            request.total_fee = totalAmount;
+            request.total_fee = refundAmount;
+            BaseResponse response=request.Execute();
+            if(response!=null)
+            {
+                res = response as RefundApplyResponse;
+            }
+            return res;
+        }
     }
 }
