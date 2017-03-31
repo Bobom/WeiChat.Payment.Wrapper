@@ -59,7 +59,8 @@ namespace WeChat.Adapter.Requests
                 {
                     string key = properties[i].Name;
                     object value = properties[i].GetValue(this);
-                    paras.Add(key, value.ToString());
+                  
+                    paras.Add(key, (value!=null?value.ToString():""));
                 }
             }
             //string paraUrl = string.Empty;

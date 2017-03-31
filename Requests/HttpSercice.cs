@@ -62,7 +62,7 @@ namespace WeChat.Adapter.Requests
                 {
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
                 }
-
+                WeChatLogger.GetLogger().Info("url:"+url);
                 if (type == RequestType.POST)
                 {
                     HttpContent content = null;

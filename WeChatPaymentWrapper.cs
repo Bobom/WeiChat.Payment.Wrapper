@@ -383,7 +383,7 @@ namespace WeChat.Adapter
             request.out_trade_no = out_payment_no;
             request.out_refund_no = refund_no;
             request.total_fee = totalAmount;
-            request.total_fee = refundAmount;
+            request.refund_fee = refundAmount;
             BaseResponse response=request.Execute();
             if(response!=null)
             {

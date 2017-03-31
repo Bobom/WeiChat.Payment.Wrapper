@@ -60,13 +60,16 @@ namespace WeChat.Adapter
                 string signStr = string.Empty;
                 foreach (KeyValuePair<string, string> parameter in paras)
                 {
-                    if (signStr == string.Empty)
+                    if (parameter.Value != null && !string.IsNullOrEmpty(parameter.Value.ToString()))
                     {
-                        signStr = parameter.Key + "=" + (parameter.Value != null ? parameter.Value : "");
-                    }
-                    else
-                    {
-                        signStr += "&" + parameter.Key + "=" + (parameter.Value != null ? parameter.Value : "");
+                        if (signStr == string.Empty)
+                        {
+                            signStr = parameter.Key + "=" + (parameter.Value != null ? parameter.Value : "");
+                        }
+                        else
+                        {
+                            signStr += "&" + parameter.Key + "=" + (parameter.Value != null ? parameter.Value : "");
+                        }
                     }
                 }
                 if(!string.IsNullOrEmpty(key))
