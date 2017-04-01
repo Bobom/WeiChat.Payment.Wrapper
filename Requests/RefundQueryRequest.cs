@@ -73,7 +73,7 @@ namespace WeChat.Adapter.Requests
                     }
 
                     XmlNode refund_status= doc.SelectSingleNode("/xml/refund_status");
-                    response.refund_status = RefundStatus.NONE;
+                    response.refund_status = WeChatRefundStatus.NONE;
                     if (refund_status!=null)
                     {
                         response.refund_status = ResponseHelper.ParseRefundStatus(refund_status.InnerText);

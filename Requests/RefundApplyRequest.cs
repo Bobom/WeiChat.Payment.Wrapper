@@ -34,6 +34,7 @@ namespace WeChat.Adapter.Requests
             op_user_id = config.ShopID;
             url = config.RefundUrl;
             refund_fee_type = "CNY";
+            needCert = true;
         }
         protected override void ParamsVerification()
         {

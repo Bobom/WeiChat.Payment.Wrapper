@@ -15,19 +15,20 @@ namespace WeChat.Adapter.Requests
    
     public class BaseRequest<T> where T:BaseResponse
     {
-        protected string url = null;
-        
+        protected string url = null;        
         protected string secret = null;
         protected string shop_secret = null;
+        protected bool needCert = false;
         public string appid { get; protected set; }        
         public string mch_id { get; protected set; }
         public string nonce_str { get; protected set; }
         public string sign_type { get; set; }
         public string body { get; set; }
-
         protected ILog logger = null;
+        protected WeChatPayConfig config;
         public BaseRequest(WeChatPayConfig config)
         {
+            this.config = config;
             logger = WeChatLogger.GetLogger();
             this.appid = config.APPID;
             this.secret = config.Secret;
@@ -96,7 +97,15 @@ namespace WeChat.Adapter.Requests
                     col.Add(param.Key, param.Value);
                 }
             }
-            string str = HttpSercice.PostHttpRequest(this.url, col, RequestType.POST, "text/xml");
+            string str = null;
+            if (needCert)
+            {
+                str = HttpSercice.PostHttpRequest(this.url, col, RequestType.POST, "text/xml",true,config);
+            }
+            else
+            {
+                str = HttpSercice.PostHttpRequest(this.url, col, RequestType.POST, "text/xml");
+            }
             logger.Info("response:" + str);
             response = ParseXML(str);
             logger.Info("Done.");

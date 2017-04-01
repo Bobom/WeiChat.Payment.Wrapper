@@ -85,29 +85,29 @@ namespace WeChat.Adapter.Responses
             }
             return tradeState;
         }
-        public static RefundStatus ParseRefundStatus(string status)
+        public static WeChatRefundStatus ParseRefundStatus(string status)
         {
             if(string.IsNullOrEmpty(status))
             {
-                return RefundStatus.NONE;
+                return WeChatRefundStatus.NONE;
             }
-            RefundStatus state = RefundStatus.NONE;
+            WeChatRefundStatus state = WeChatRefundStatus.NONE;
             switch (status)
             {
                 case "SUCCESS":
-                    state = RefundStatus.SUCCESS;
+                    state = WeChatRefundStatus.SUCCESS;
                     break;
                 case "REFUNDCLOSE":
-                    state = RefundStatus.REFUNDCLOSE;
+                    state = WeChatRefundStatus.REFUNDCLOSE;
                     break;
                 case "NOTSURE":
-                    state = RefundStatus.NOTSURE;
+                    state = WeChatRefundStatus.NOTSURE;
                     break;
                 case "PROCESSING":
-                    state = RefundStatus.PROCESSING;
+                    state = WeChatRefundStatus.PROCESSING;
                     break;
                 case "CHANGE":
-                    state = RefundStatus.CHANGE;
+                    state = WeChatRefundStatus.CHANGE;
                     break;
             }
 

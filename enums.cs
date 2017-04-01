@@ -29,7 +29,7 @@ namespace WeChat.Adapter
         MICROPAY,
         NONE
     }
-    public enum RefundStatus
+    public enum WeChatRefundStatus
     {
         SUCCESS,
         REFUNDCLOSE,

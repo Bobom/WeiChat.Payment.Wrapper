@@ -12,7 +12,7 @@ namespace WeChat.Adapter.Responses
         public string out_trade_no { get; set; }
         public string out_refund_no { get; set; }
         public string refund_id { get; set; }
-        public RefundStatus refund_status { get; set; }
+        public WeChatRefundStatus refund_status { get; set; }
         public string refund_accout { get; set; }
         public string refund_recv_accout { get; set; }
     }

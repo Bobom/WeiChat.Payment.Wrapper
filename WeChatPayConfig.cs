@@ -34,5 +34,6 @@ namespace WeChat.Adapter
         public string CropTransQueryUrl { get; set; }
         public string RefundUrl { get; set; }
         public string RefundQueryUrl { get; set; }
+        public string CertFilePath { get; set; }
     }
 }

@@ -6,6 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using WeChat.Adapter;
@@ -48,16 +50,35 @@ namespace WeChat.Adapter.Requests
             }
             return returnmsg;
         }
-        public static string PostHttpRequest(string url, NameValueCollection col, RequestType type, string contentType)
+
+        private static bool CheckValidationResult(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors errors)
+        {
+            if (errors == SslPolicyErrors.None)
+                return true;
+            return false;
+        }
+        public static string PostHttpRequest(string url, NameValueCollection col, RequestType type, string contentType,bool needCret=false,WeChatPayConfig config=null)
         {
             WeChatLogger.GetLogger().Info("PostHttpRequest.........");
             string output = null;
             StreamReader rs = null;
             try
             {
+                if(needCret && config==null)
+                {
+                    throw new Exception("Please provides wechatpayconfig instance when need cert");
+                }
                 string json_str = string.Empty;
-
                 var client = new HttpClient();
+                if (needCret)
+                {
+                    WebRequestHandler handler = new WebRequestHandler();
+                    System.Net.ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(CheckValidationResult);
+                    X509Certificate cer = new X509Certificate(config.CertFilePath, config.ShopID);
+                    handler.ClientCertificates.Add(cer);
+                    client = new HttpClient(handler);
+                }
+
                 if (!string.IsNullOrEmpty(contentType))
                 {
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));

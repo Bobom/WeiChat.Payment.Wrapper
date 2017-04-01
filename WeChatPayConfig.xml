@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <WeChatPayConfig>
   <OpenAppId>OpenAppId</OpenAppId>
-  <OpenSecret>86d8edd684d478dc5e780b1a26ce6561</OpenSecret>
-  <APPID>wx1435d87f4ac9dc6d</APPID>
-  <Secret>fbfa762a9f56b836763e2bfbd7ff7ad4</Secret>
-  <ShopID>1264216901</ShopID>
-  <ShopSecret>dfsadfsadfa2343fsdfsa35345435sdf</ShopSecret>
+  <OpenSecret></OpenSecret>
+  <APPID></APPID>
+  <Secret></Secret>
+  <ShopID></ShopID>
+  <ShopSecret></ShopSecret>
   <SignType>MD5</SignType>
   <CharSet>utf-8</CharSet>
   <CreateOrderUrl>https://api.mch.weixin.qq.com/pay/unifiedorder</CreateOrderUrl>
-  <NotifyUrl>http://yfll.eruifo.com/Payment/WeChatPayBack</NotifyUrl>
+  <NotifyUrl></NotifyUrl>
   <PaymentQueryUrl>https://api.mch.weixin.qq.com/pay/orderquery</PaymentQueryUrl>
   <GetTokenUrl>https://api.weixin.qq.com/cgi-bin/token</GetTokenUrl>
   <GetJsTicketUrl>https://api.weixin.qq.com/cgi-bin/ticket/getticket</GetJsTicketUrl>
@@ -19,5 +19,6 @@
   <CropTransQueryUrl>https://api.mch.weixin.qq.com/mmpaymkttransfers/gettransferinfo</CropTransQueryUrl>
   <RefundUrl>https://api.mch.weixin.qq.com/secapi/pay/refund</RefundUrl>
   <RefundQueryUrl>https://api.mch.weixin.qq.com/pay/refundquery</RefundQueryUrl>
+  <CertFilePath></CertFilePath>
 </WeChatPayConfig>
 
