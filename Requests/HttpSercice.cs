@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Security;
@@ -72,9 +73,11 @@ namespace WeChat.Adapter.Requests
                 var client = new HttpClient();
                 if (needCret)
                 {
+                    System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                     WebRequestHandler handler = new WebRequestHandler();
                     System.Net.ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(CheckValidationResult);
                     X509Certificate cer = new X509Certificate(config.CertFilePath, config.ShopID);
+                    WeChatLogger.GetLogger().Info("cert path:"+config.CertFilePath);
                     handler.ClientCertificates.Add(cer);
                     client = new HttpClient(handler);
                 }
