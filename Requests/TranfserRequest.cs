@@ -10,6 +10,8 @@ namespace WeChat.Adapter.Requests
 {
     public class TranfserRequest:BaseRequest<TranfserResponse>
     {
+        public string mch_appid { get; set; }
+        public string mchid { get; set; }
         public string device_info { get; set; }
         public string partner_trade_no { get; set; }
         public string openid { get; set; }
@@ -21,18 +23,18 @@ namespace WeChat.Adapter.Requests
         public TranfserRequest(WeChatPayConfig config):base(config)
         {
             //必须强制验证收款方姓名
-            check_name = "FORCE_CHECK";
+            check_name = "NO_CHECK";
         }
 
         protected override void ParamsVerification()
         {
             if (string.IsNullOrEmpty(url))
             {
-                WeChatException ex = new WeChatException("Refund url cannot be empty");
+                WeChatException ex = new WeChatException("Tranfser url cannot be empty");
                 logger.Error(ex);
                 throw ex;
             }
-            if (string.IsNullOrEmpty(partner_trade_no) && string.IsNullOrEmpty(partner_trade_no))
+            if (string.IsNullOrEmpty(partner_trade_no))
             {
                 WeChatException ex = new WeChatException("partner_trade_no cannot be empty");
                 logger.Error(ex);
@@ -43,14 +45,7 @@ namespace WeChat.Adapter.Requests
                 WeChatException ex = new WeChatException("openid cannot be empty");
                 logger.Error(ex);
                 throw ex;
-            }
-
-            if (string.IsNullOrEmpty(re_user_name))
-            {
-                WeChatException ex = new WeChatException("re_user_name cannot be empty");
-                logger.Error(ex);
-                throw ex;
-            }
+            }          
 
             if (string.IsNullOrEmpty(desc))
             {
@@ -68,7 +63,6 @@ namespace WeChat.Adapter.Requests
 
             if(amount<=0)
             {
-
                 WeChatException ex = new WeChatException("amount cannot be 0");
                 logger.Error(ex);
                 throw ex;
