@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -10,8 +12,6 @@ namespace WeChat.Adapter.Requests
 {
     public class TranfserRequest:BaseRequest<TranfserResponse>
     {
-        public string mch_appid { get; set; }
-        public string mchid { get; set; }
         public string device_info { get; set; }
         public string partner_trade_no { get; set; }
         public string openid { get; set; }
@@ -24,6 +24,60 @@ namespace WeChat.Adapter.Requests
         {
             //必须强制验证收款方姓名
             check_name = "NO_CHECK";
+            needCert = true;
+        }
+
+        public override BaseResponse Execute()
+        {
+            logger.Info("Executing...");
+            ParamsVerification();
+            BaseResponse response = null;
+            SortedDictionary<string, string> paras = new SortedDictionary<string, string>();
+            Type type = this.GetType();
+            PropertyInfo[] properties = type.GetProperties();
+            if (properties != null)
+            {
+                for (int i = 0; i < properties.Length; i++)
+                {
+                    string key = properties[i].Name;
+                    if(key== "appid")
+                    {
+                        key= "mch_appid";
+                    }
+                    if (key == "mch_id")
+                    {
+                        key = "mchid";
+                    }
+                    object value = properties[i].GetValue(this);
+
+                    paras.Add(key, (value != null ? value.ToString() : ""));
+                }
+            }
+            string sign = null;
+            sign = HashWrapper.MD5_Hash(paras, this.shop_secret); 
+            logger.Info("sign:" + sign);
+            paras.Add("sign", sign);
+            NameValueCollection col = new NameValueCollection();
+            foreach (KeyValuePair<string, string> param in paras)
+            {
+                if (param.Value != null && !string.IsNullOrEmpty(param.Value.ToString()))
+                {
+                    col.Add(param.Key, param.Value);
+                }
+            }
+            string str = null;
+            if (needCert)
+            {
+                str = HttpSercice.PostHttpRequest(this.url, col, RequestType.POST, "text/xml", true, config);
+            }
+            else
+            {
+                str = HttpSercice.PostHttpRequest(this.url, col, RequestType.POST, "text/xml");
+            }
+            logger.Info("response:" + str);
+            response = ParseXML(str);
+            logger.Info("Done.");
+            return response;
         }
 
         protected override void ParamsVerification()

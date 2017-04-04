@@ -64,28 +64,8 @@ namespace WeChat.Adapter.Requests
                     paras.Add(key, (value!=null?value.ToString():""));
                 }
             }
-            //string paraUrl = string.Empty;
-            //foreach (KeyValuePair<string, object> param in paras)
-            //{
-            //    if (param.Value != null && !string.IsNullOrEmpty(param.Value.ToString()))
-            //    {
-            //        if (paraUrl == string.Empty)
-            //        {
-            //            paraUrl = param.Key + "=" + (param.Value != null ? param.Value.ToString() : "");
-            //        }
-            //        else
-            //        {
-            //            paraUrl += "&" + param.Key + "=" + (param.Value != null ? param.Value.ToString() : "");
-            //        }
-            //    }
-            //}
-            //paraUrl += "&key=" + this.shop_secret;
-            //logger.Info("parameters:" + paraUrl);
+           
             string sign = null;
-            //if (signType.Trim().ToLower() == "md5")
-            //{
-            //    sign = HashWrapper.MD5_Hash(paraUrl);
-            //}
             sign = HashWrapper.MD5_Hash(paras, this.shop_secret); //sign.ToUpper();
             logger.Info("sign:" + sign);
             paras.Add("sign", sign);
