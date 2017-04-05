@@ -25,6 +25,7 @@ namespace WeChat.Adapter.Requests
             //必须强制验证收款方姓名
             check_name = "NO_CHECK";
             needCert = true;
+            url = config.CropTransUrl;
         }
 
         public override BaseResponse Execute()
