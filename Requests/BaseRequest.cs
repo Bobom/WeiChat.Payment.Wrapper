@@ -119,22 +119,21 @@ namespace WeChat.Adapter.Requests
                 {
                     res.return_code = ResponseHelper.ParseResultState(return_code.InnerText);
                 }
-
-                //If fail
-                if (res.return_code == ResultState.FAIL)
+                XmlNode result_code = doc.SelectSingleNode("/xml/result_code");
+                if (result_code != null && !string.IsNullOrEmpty(result_code.InnerText))
                 {
-                    XmlNode err_code = doc.SelectSingleNode("/xml/err_code");
-                    if (err_code != null && !string.IsNullOrEmpty(err_code.InnerText))
-                    {
-                        res.err_code = err_code.InnerText.Trim();
-                    }
-                    XmlNode err_code_des = doc.SelectSingleNode("/xml/err_code_des");
-                    if (err_code_des != null && !string.IsNullOrEmpty(err_code_des.InnerText))
-                    {
-                        res.err_code_des = err_code_des.InnerText.Trim();
-                    }
+                    res.result_code = result_code.InnerText.Trim();
+                }            
+                XmlNode err_code = doc.SelectSingleNode("/xml/err_code");
+                if (err_code != null && !string.IsNullOrEmpty(err_code.InnerText))
+                {
+                    res.err_code = err_code.InnerText.Trim();
                 }
-
+                XmlNode err_code_des = doc.SelectSingleNode("/xml/err_code_des");
+                if (err_code_des != null && !string.IsNullOrEmpty(err_code_des.InnerText))
+                {
+                    res.err_code_des = err_code_des.InnerText.Trim();
+                }
                 XmlNode return_msg = doc.SelectSingleNode("/xml/return_msg");
                 if (return_msg != null && !string.IsNullOrEmpty(return_msg.InnerText))
                 {
@@ -164,11 +163,7 @@ namespace WeChat.Adapter.Requests
                 {
                     res.sign = sign.InnerText.Trim();
                 }
-                XmlNode result_code = doc.SelectSingleNode("/xml/result_code");
-                if (result_code != null && !string.IsNullOrEmpty(result_code.InnerText))
-                {
-                    res.result_code = result_code.InnerText.Trim();
-                }
+               
             }
             catch(Exception ex)
             {

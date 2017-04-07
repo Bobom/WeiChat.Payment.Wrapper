@@ -49,6 +49,10 @@ namespace WeChat.Adapter.Requests
                     {
                         key = "mchid";
                     }
+                    if (key == "body" || key== "sign_type")
+                    {
+                        continue;
+                    }
                     object value = properties[i].GetValue(this);
 
                     paras.Add(key, (value != null ? value.ToString() : ""));
