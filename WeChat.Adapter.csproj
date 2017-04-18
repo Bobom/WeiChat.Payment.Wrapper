@@ -50,6 +50,8 @@
     <Compile Include="Authorization\AuthHelper.cs" />
     <Compile Include="enums.cs" />
     <Compile Include="JSAPITicket.cs" />
+    <Compile Include="Messages\BaseMessage.cs" />
+    <Compile Include="Messages\MessageObjects.cs" />
     <Compile Include="Requests\RefundApplyRequest.cs" />
     <Compile Include="Requests\RefundQueryRequest.cs" />
     <Compile Include="Requests\TranfserRequest.cs" />
