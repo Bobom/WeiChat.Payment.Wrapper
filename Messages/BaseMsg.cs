@@ -17,7 +17,7 @@ namespace WeChat.Adapter.Messages
         public string topcolor;
         public string template_id;
         public string url;
-        private string ToJson()
+        protected string ToJson()
         {
             if (string.IsNullOrEmpty(touser))
             {
@@ -33,18 +33,26 @@ namespace WeChat.Adapter.Messages
             }
             StringBuilder jsonBuilder = new StringBuilder("{");
             Type type = this.GetType();
-            FieldInfo[] fields= type.GetFields(BindingFlags.Public);
+            FieldInfo[] fields= type.GetFields();
             if(fields!=null && fields.Length>0)
             {
                 for(int i=0;i<fields.Length;i++)
                 {
                     FieldInfo field = fields[i];
+                    if (field.IsPrivate)
+                    {
+                        continue;
+                    }
                     jsonBuilder.Append("\"" + field.Name + "\":");
                     jsonBuilder.Append("\"" + field.GetValue(this).ToString() + "\",");
                 }
             }
+            else
+            {
+                logger.Info("No fields");
+            }
             jsonBuilder.Append("\"data\":{");
-            PropertyInfo[] properties = type.GetProperties(BindingFlags.Public);
+            PropertyInfo[] properties = type.GetProperties();
             if(properties!=null && properties.Length > 0)
             {
                 for(int i=0;i< properties.Length;i++)
@@ -68,6 +76,10 @@ namespace WeChat.Adapter.Messages
                     }
                 }
             }
+            else
+            {
+                logger.Info("No properties");
+            }
 
             jsonBuilder.Append("}}");
             return jsonBuilder.ToString();
@@ -79,10 +91,12 @@ namespace WeChat.Adapter.Messages
             {
                 throw new WeChatException("Template url cannot be empty");
             }
+            this.config = _config;
             if(token==null || string.IsNullOrEmpty(token.Access_Token))
             {
                 throw new WeChatException("Access token cannot be empty");
             }
+            this.token = token;
         }
         public virtual void Send()
         {
