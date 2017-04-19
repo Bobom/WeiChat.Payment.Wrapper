@@ -188,5 +188,98 @@ namespace WeChat.Adapter.Requests
             WeChatLogger.GetLogger().Info("Post request done.");
             return output;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="data">Data could be xml string, or json xml string, or could be key value pairs string</param>
+        /// <param name="contentType"></param>
+        /// <param name="type"></param>
+        /// <param name="needCret"></param>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        public static string PostHttpRequest(string url, string data, string contentType, RequestType type, bool needCret = false, WeChatPayConfig config = null)
+        {
+            WeChatLogger.GetLogger().Info("PostHttpRequest.........");
+            string output = null;
+            StreamReader rs = null;
+            try
+            {
+                if (needCret && config == null)
+                {
+                    throw new Exception("Please provides wechatpayconfig instance when need cert");
+                }
+                string json_str = string.Empty;
+                var client = new HttpClient();
+                if (needCret)
+                {
+                    System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                    WebRequestHandler handler = new WebRequestHandler();
+                    System.Net.ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(CheckValidationResult);
+                    X509Certificate cer = new X509Certificate(config.CertFilePath, config.ShopID);
+                    WeChatLogger.GetLogger().Info("cert path:" + config.CertFilePath);
+                    handler.ClientCertificates.Add(cer);
+                    client = new HttpClient(handler);
+                }
+                if(!string.IsNullOrEmpty(contentType))
+                {
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
+                }                
+              
+                WeChatLogger.GetLogger().Info("url:" + url);
+                if (type == RequestType.POST)
+                {
+                    HttpContent content = null;                    
+                    content = new StringContent(data);
+                    if (!string.IsNullOrEmpty(data))
+                    {
+                        WeChatLogger.GetLogger().Info("data:"+data);
+                    }
+                    var response = client.PostAsync(url, content).Result;
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        return null;
+                    }
+                    Stream res = response.Content.ReadAsStreamAsync().Result;
+                    //res = response.Content.ReadAsStreamAsync().Result;
+                    if (contentType != "multipart/form-data")
+                    {
+                        rs = new StreamReader(res);
+                        output = rs.ReadToEnd();
+                    }
+                }
+                else if (type == RequestType.GET)
+                {                   
+                    string getUrl = url;
+                    if (!string.IsNullOrEmpty(data))
+                    {
+                        getUrl += "?" + data;
+                    }
+                    var response = client.GetAsync(getUrl).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        Stream res = response.Content.ReadAsStreamAsync().Result;
+                        rs = new StreamReader(res);
+                        output = rs.ReadToEnd();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                WeChatLogger.GetLogger().Error(ex);
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+            }
+            finally
+            {
+                if (rs != null)
+                {
+                    rs.Close();
+                }
+            }
+            WeChatLogger.GetLogger().Info("Post request done.");
+            return output;
+        }
     }
 }

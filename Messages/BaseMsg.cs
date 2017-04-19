@@ -4,15 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
+using log4net;
+using WeChat.Adapter.Requests;
 namespace WeChat.Adapter.Messages
 {
     public class BaseMsg
     {
+        private WeChatPayConfig config;
+        private AccessToken token;
+        private ILog logger = WeChatLogger.GetLogger();
         public string touser;
         public string topcolor;
         public string template_id;
         public string url;
-        public string ToJson()
+        private string ToJson()
         {
             if (string.IsNullOrEmpty(touser))
             {
@@ -28,7 +33,7 @@ namespace WeChat.Adapter.Messages
             }
             StringBuilder jsonBuilder = new StringBuilder("{");
             Type type = this.GetType();
-            FieldInfo[] fields= type.GetFields();
+            FieldInfo[] fields= type.GetFields(BindingFlags.Public);
             if(fields!=null && fields.Length>0)
             {
                 for(int i=0;i<fields.Length;i++)
@@ -39,7 +44,7 @@ namespace WeChat.Adapter.Messages
                 }
             }
             jsonBuilder.Append("\"data\":{");
-            PropertyInfo[] properties = type.GetProperties();
+            PropertyInfo[] properties = type.GetProperties(BindingFlags.Public);
             if(properties!=null && properties.Length > 0)
             {
                 for(int i=0;i< properties.Length;i++)
@@ -67,16 +72,38 @@ namespace WeChat.Adapter.Messages
             jsonBuilder.Append("}}");
             return jsonBuilder.ToString();
         }
-    }
-    public class OrderStatusChangeMsg:BaseMsg
-    {
-        public string first { get; set; }
-        public string remark { get; set; }
-        public string OrderSn { get; set; }
-        public string OrderStatus { get; set; }
-        public OrderStatusChangeMsg()
+
+        public BaseMsg(WeChatPayConfig _config,AccessToken token)
         {
-            template_id = "RsP_3nVu7U1HLF1I01rTdIjFk8HAFJbuJSt4Jsbcs3k";
+            if(_config==null || string.IsNullOrEmpty(_config.TemplateMessageUrl))
+            {
+                throw new WeChatException("Template url cannot be empty");
+            }
+            if(token==null || string.IsNullOrEmpty(token.Access_Token))
+            {
+                throw new WeChatException("Access token cannot be empty");
+            }
         }
-    }
+        public virtual void Send()
+        {
+            logger.Info("Access token:" + token.Access_Token);            
+            string reqUrl = config.TemplateMessageUrl + token.Access_Token;
+            string toJson = ToJson();
+            if (string.IsNullOrEmpty(toJson))
+            {
+                logger.Error("message cannot be null");
+                throw new WeChatException("message cannot be null");
+            }
+            logger.Info(string.Format("Json string {0} has been sent to wechat", toJson));
+            string res = HttpSercice.PostHttpRequest(reqUrl, toJson, null, RequestType.POST, false, null);
+            if (string.IsNullOrEmpty(res))
+            {
+                logger.Error("no response from wechat");
+            }
+            else
+            {
+                logger.Error(res);
+            }
+        }
+    }   
 }
