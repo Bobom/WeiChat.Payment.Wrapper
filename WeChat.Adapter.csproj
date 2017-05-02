@@ -51,7 +51,9 @@
     <Compile Include="enums.cs" />
     <Compile Include="JSAPITicket.cs" />
     <Compile Include="Messages\BaseMsg.cs" />
+    <Compile Include="Messages\CropCalculateMessage.cs" />
     <Compile Include="Messages\OrderStatusChangeMsg.cs" />
+    <Compile Include="Messages\RefundNotificationMessage.cs" />
     <Compile Include="Requests\RefundApplyRequest.cs" />
     <Compile Include="Requests\RefundQueryRequest.cs" />
     <Compile Include="Requests\TranfserRequest.cs" />
