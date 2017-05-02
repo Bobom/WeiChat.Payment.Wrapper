@@ -19,6 +19,7 @@ namespace WeChat.Adapter.Messages
         public string url;
         protected string ToJson()
         {
+            logger.Info("To Json...");        
             if (string.IsNullOrEmpty(touser))
             {
                 throw new WeChatException("touser cannot be empty");
@@ -31,6 +32,7 @@ namespace WeChat.Adapter.Messages
             {
                 topcolor = "#3DD471";
             }
+            
             StringBuilder jsonBuilder = new StringBuilder("{");
             Type type = this.GetType();
             FieldInfo[] fields= type.GetFields();
@@ -43,8 +45,13 @@ namespace WeChat.Adapter.Messages
                     {
                         continue;
                     }
+                    if (field.GetValue(this) == null)
+                    {
+                        logger.Info(string.Format("Value of field {0} is null",field.Name));
+                        continue;
+                    }
                     jsonBuilder.Append("\"" + field.Name + "\":");
-                    jsonBuilder.Append("\"" + field.GetValue(this).ToString() + "\",");
+                    jsonBuilder.Append("\"" + (field.GetValue(this)!=null?field.GetValue(this).ToString():"") + "\",");
                 }
             }
             else
@@ -59,6 +66,11 @@ namespace WeChat.Adapter.Messages
                 {
                     PropertyInfo property = properties[i];
                     string proName = property.Name;
+                    if (property.GetValue(this) == null)
+                    {
+                        logger.Info(string.Format("Value of property {0} is null",proName));
+                        continue;
+                    }
                     string value = property.GetValue(this).ToString();
                     string color = "#173177";
                     if (value!=null && value.IndexOf("@") > -1)
@@ -82,6 +94,7 @@ namespace WeChat.Adapter.Messages
             }
 
             jsonBuilder.Append("}}");
+            logger.Info("To Json done.");
             return jsonBuilder.ToString();
         }
 
@@ -100,23 +113,35 @@ namespace WeChat.Adapter.Messages
         }
         public virtual void Send()
         {
-            logger.Info("Access token:" + token.Access_Token);            
-            string reqUrl = config.TemplateMessageUrl + token.Access_Token;
-            string toJson = ToJson();
-            if (string.IsNullOrEmpty(toJson))
+            try
             {
-                logger.Error("message cannot be null");
-                throw new WeChatException("message cannot be null");
+                logger.Info("Template Id:" + template_id);
+                logger.Info("Access token:" + token.Access_Token);
+                string reqUrl = config.TemplateMessageUrl + token.Access_Token;
+                string toJson = ToJson();
+                if (string.IsNullOrEmpty(toJson))
+                {
+                    logger.Error("message cannot be null");
+                    throw new WeChatException("message cannot be null");
+                }
+                logger.Info(string.Format("Json string {0} has been sent to wechat", toJson));
+                string res = HttpSercice.PostHttpRequest(reqUrl, toJson, null, RequestType.POST, false, null);
+                if (string.IsNullOrEmpty(res))
+                {
+                    logger.Error("no response from wechat");
+                }
+                else
+                {
+                    logger.Info(res);
+                }
             }
-            logger.Info(string.Format("Json string {0} has been sent to wechat", toJson));
-            string res = HttpSercice.PostHttpRequest(reqUrl, toJson, null, RequestType.POST, false, null);
-            if (string.IsNullOrEmpty(res))
+            catch(WeChatException wex)
             {
-                logger.Error("no response from wechat");
+                logger.Error(wex);
             }
-            else
+            catch(Exception ex)
             {
-                logger.Error(res);
+                logger.Fatal(ex);
             }
         }
     }   
