@@ -44,5 +44,38 @@ namespace WeChat.Adapter.Authorization
             }
             return response.UserInfo;
         }
+
+        /// <summary>
+        /// Used by Wechat Mini program to decode userinfo
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns>Json str contains openid and session_key</returns>
+        public static string GetSeeionKey(WeChatPayConfig config,string code)
+        {
+            string result = null;
+            if (config == null) {
+                throw new WeChatException("Configuration cannot be empty.");
+            }
+            if (string.IsNullOrEmpty(config.MiniAppId)) {
+                throw new WeChatException("Appid cannot be empty of wechat mini app");
+            }
+            if (string.IsNullOrEmpty(config.MiniAppSecret))
+            {
+                throw new WeChatException("AppSecret cannot be empty of wechat mini app");
+            }
+            if (string.IsNullOrEmpty(config.GetSeeionKeyApi))
+            {
+                throw new WeChatException("Get seeion key api url cannot be empty of wechat mini app");
+            }
+
+            string reqUrl = config.GetSeeionKeyApi;
+            if (!reqUrl.EndsWith("?"))
+            {
+                reqUrl +="?";
+            }
+            reqUrl += "appid="+config.MiniAppId+"&secret="+config.MiniAppSecret+"&js_code="+code+ "&grant_type=authorization_code";
+            result=HttpSercice.PostHttpRequest(reqUrl, null, null, RequestType.GET, false, null);
+            return result;
+        }
     }
 }

@@ -15,6 +15,13 @@ namespace WeChat.Adapter
         public string OpenSecret { get; set; }
 
         /// <summary>
+        /// 微信小程序appid
+        /// </summary>
+        public string MiniAppId { get; set; }
+        public string MiniAppSecret { get; set; }
+        public string GetSeeionKeyApi { get; set; }
+
+        /// <summary>
         /// 以下是公众账号的appid和secret
         /// </summary>
         public string APPID { get; set; }
