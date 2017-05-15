@@ -307,6 +307,27 @@ namespace WeChat.Adapter
             return prepayId;
         }
 
+        public static string GetWeChatMiniAppPrepayId(WeChatPayConfig config, string openId, string out_trade_no, string body, string clientIp, int totalFee, TradeType type)
+        {
+            string prepayId = string.Empty;
+            BaseResponse response = null;
+            PreOrderRequest request = new PreOrderRequest(config);
+            request.out_trade_no = out_trade_no;
+            request.spbill_create_ip = clientIp;
+            request.total_fee = totalFee;
+            request.trade_type = type;
+            request.body = body;
+            request.detail = body;
+            request.openid = openId;
+            request.appid = config.MiniAppId;
+            response = request.Execute();
+            if (response != null)
+            {
+                prepayId = ((PreOrderResponse)response).prepay_id;
+            }
+            return prepayId;
+        }
+
         /// <summary>
         /// Pay signature for JSSDK payment
         /// </summary>
@@ -328,7 +349,20 @@ namespace WeChat.Adapter
             sign = HashWrapper.MD5_Hash(param,config.ShopSecret);
             return sign;
         }
-        
+
+        public static string GetJsApiMiniAppPaySign(WeChatPayConfig config, string nancestr, string timestamp, string prepayId, string signType = "MD5")
+        {
+            string sign = null;
+            SortedDictionary<string, string> param = new SortedDictionary<string, string>();
+            param.Add("timeStamp", timestamp);
+            param.Add("nonceStr", nancestr);
+            param.Add("appId", config.MiniAppId);
+            param.Add("package", "prepay_id=" + prepayId);
+            param.Add("signType", signType);
+            sign = HashWrapper.MD5_Hash(param, config.ShopSecret);
+            return sign;
+        }
+
         /// <summary>
         /// JSSDK Payment configure signature
         /// </summary>

@@ -46,4 +46,12 @@ namespace WeChat.Adapter
         PROCESSING,
         NONE
     }
+
+    public enum AppType
+    {
+        OPEN_PLATFORM = 1,
+        PUBLICK_SVR = 2,
+        MINI_APP = 3,
+        APP = 4
+    }
 }

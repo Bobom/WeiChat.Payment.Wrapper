@@ -19,9 +19,9 @@ namespace WeChat.Adapter.Requests
         protected string secret = null;
         protected string shop_secret = null;
         protected bool needCert = false;
-        public string appid { get; protected set; }        
-        public string mch_id { get; protected set; }
-        public string nonce_str { get; protected set; }
+        public string appid { get; set; }        
+        public string mch_id { get; set; }
+        public string nonce_str { get; set; }
         public string sign_type { get; set; }
         public string body { get; set; }
         protected ILog logger = null;
