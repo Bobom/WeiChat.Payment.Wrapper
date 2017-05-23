@@ -409,7 +409,7 @@ namespace WeChat.Adapter
         /// <param name="refund_no">Local refund number</param>
         /// <param name="amount">Fen, please pay attention</param>
         /// <returns></returns>
-        public static RefundApplyResponse Refund(WeChatPayConfig config,string wechat_paymentNo,string out_payment_no,string refund_no,int refundAmount,int totalAmount)
+        public static RefundApplyResponse Refund(WeChatPayConfig config,string wechat_paymentNo,string out_payment_no,string refund_no,int refundAmount,int totalAmount, AppType from= AppType.PUBLICK_SVR)
         {
             RefundApplyResponse res = null;
             RefundApplyRequest request = new RefundApplyRequest(config);
@@ -418,6 +418,18 @@ namespace WeChat.Adapter
             request.out_refund_no = refund_no;
             request.total_fee = totalAmount;
             request.refund_fee = refundAmount;
+            switch (from)
+            {
+                case AppType.PUBLICK_SVR:
+                    request.appid = config.APPID;
+                    break;
+                case AppType.MINI_APP:
+                    request.appid = config.MiniAppId;
+                    break;
+                case AppType.OPEN_PLATFORM:
+                    request.appid = config.APPID;
+                    break;
+            }
             BaseResponse response=request.Execute();
             if(response!=null)
             {
