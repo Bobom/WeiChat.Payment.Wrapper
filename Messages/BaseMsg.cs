@@ -10,14 +10,15 @@ namespace WeChat.Adapter.Messages
 {
     public class BaseMsg
     {
-        private WeChatPayConfig config;
-        private AccessToken token;
-        private ILog logger = WeChatLogger.GetLogger();
+        protected WeChatPayConfig config;
+        protected AccessToken token;
+        protected ILog logger = WeChatLogger.GetLogger();
+        protected string apiUrl = null;
         public string touser;
         public string topcolor;
         public string template_id;
         public string url;
-        protected string ToJson()
+        protected virtual string ToJson()
         {
             logger.Info("To Json...");        
             if (string.IsNullOrEmpty(touser))
@@ -41,17 +42,16 @@ namespace WeChat.Adapter.Messages
                 for(int i=0;i<fields.Length;i++)
                 {
                     FieldInfo field = fields[i];
-                    if (field.IsPrivate)
+                    if (field.IsPublic)
                     {
-                        continue;
+                        if (field.GetValue(this) == null)
+                        {
+                            logger.Info(string.Format("Value of field {0} is null", field.Name));
+                            continue;
+                        }
+                        jsonBuilder.Append("\"" + field.Name + "\":");
+                        jsonBuilder.Append("\"" + (field.GetValue(this) != null ? field.GetValue(this).ToString() : "") + "\",");
                     }
-                    if (field.GetValue(this) == null)
-                    {
-                        logger.Info(string.Format("Value of field {0} is null",field.Name));
-                        continue;
-                    }
-                    jsonBuilder.Append("\"" + field.Name + "\":");
-                    jsonBuilder.Append("\"" + (field.GetValue(this)!=null?field.GetValue(this).ToString():"") + "\",");
                 }
             }
             else
@@ -109,6 +109,7 @@ namespace WeChat.Adapter.Messages
             {
                 throw new WeChatException("Access token cannot be empty");
             }
+            this.apiUrl = config.TemplateMessageUrl;
             this.token = token;
         }
         public virtual void Send()
@@ -117,7 +118,8 @@ namespace WeChat.Adapter.Messages
             {
                 logger.Info("Template Id:" + template_id);
                 logger.Info("Access token:" + token.Access_Token);
-                string reqUrl = config.TemplateMessageUrl + token.Access_Token;
+                string reqUrl = this.apiUrl + token.Access_Token;
+                logger.Info("Template message url:" + reqUrl);
                 string toJson = ToJson();
                 if (string.IsNullOrEmpty(toJson))
                 {

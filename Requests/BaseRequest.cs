@@ -16,7 +16,7 @@ namespace WeChat.Adapter.Requests
     public class BaseRequest<T> where T:BaseResponse
     {
         protected string url = null;        
-        protected string secret = null;
+        public string secret = null;
         protected string shop_secret = null;
         protected bool needCert = false;
         public string appid { get; set; }        
