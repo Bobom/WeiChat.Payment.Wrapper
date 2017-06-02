@@ -44,5 +44,6 @@ namespace WeChat.Adapter
         public string CertFilePath { get; set; }
         public string TemplateMessageUrl { get; set; }
         public string MiniAppTemplateMessageUrl { get; set; }
+        public string RefundAccount { get; set; }
     }
 }

@@ -418,6 +418,8 @@ namespace WeChat.Adapter
             request.out_refund_no = refund_no;
             request.total_fee = totalAmount;
             request.refund_fee = refundAmount;
+            request.refund_account = config.RefundAccount;// "REFUND_SOURCE_RECHARGE_FUNDS";
+            logger.Info(string.Format("Refund Account:{0}", (config.RefundAccount != null ? config.RefundAccount : "REFUND_SOURCE_UNSETTLED_FUNDS")));
             switch (from)
             {
                 case AppType.PUBLICK_SVR:

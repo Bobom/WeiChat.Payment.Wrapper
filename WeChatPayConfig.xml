@@ -20,5 +20,6 @@
   <RefundUrl>https://api.mch.weixin.qq.com/secapi/pay/refund</RefundUrl>
   <RefundQueryUrl>https://api.mch.weixin.qq.com/pay/refundquery</RefundQueryUrl>
   <CertFilePath></CertFilePath>
+  <RefundAccount>REFUND_SOURCE_RECHARGE_FUNDS</RefundAccount>
 </WeChatPayConfig>
 
