@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace WeChat.Adapter
 {
+    public enum RefoundAccount
+    {
+        REFUND_SOURCE_UNSETTLED_FUNDS,
+        REFUND_SOURCE_RECHARGE_FUNDS
+    }
     public enum ResultState {
         SUCCESS,
         FAIL,
