@@ -54,6 +54,7 @@
     <Compile Include="Messages\CropCalculateMessage.cs" />
     <Compile Include="Messages\MiniAppMessageBase.cs" />
     <Compile Include="Messages\MiniMessageEntity.cs" />
+    <Compile Include="Messages\NormalNotificationMessage.cs" />
     <Compile Include="Messages\OrderStatusChangeMsg.cs" />
     <Compile Include="Messages\RefundNotificationMessage.cs" />
     <Compile Include="Requests\RefundApplyRequest.cs" />
